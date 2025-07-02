@@ -1,6 +1,6 @@
 import { eq, and } from 'drizzle-orm';
 import { db } from '../../database/connection.js';
-import { evaluations, evaluationSummaries, kpis } from '../../database/schema.js';
+import { evaluations, evaluationSummaries } from '../../database/schema.js';
 import { DataEntryService } from './DataEntryService.js';
 import { KPIService } from './KPIService.js';
 import { FormulaEngine } from '../utils/FormulaEngine.js';
