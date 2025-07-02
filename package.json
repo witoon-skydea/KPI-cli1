@@ -1,7 +1,7 @@
 {
   "name": "kpi-cli",
   "version": "1.0.0",
-  "description": "KPI management CLI application with SQLite database, designed to be API-ready",
+  "description": "Complete KPI management CLI application with SQLite database, reporting, and analytics - production ready and API-ready",
   "main": "dist/cli/index.js",
   "type": "module",
   "bin": {
@@ -20,8 +20,16 @@
     "db:studio": "drizzle-kit studio",
     "cli": "tsx src/cli/index.ts"
   },
-  "keywords": ["kpi", "cli", "performance", "management", "sqlite", "typescript"],
-  "author": "",
+  "keywords": ["kpi", "cli", "performance", "management", "sqlite", "typescript", "reporting", "analytics", "evaluation", "scoring"],
+  "author": "KPI CLI Development Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/witoon-skydea/KPI-cli1.git"
+  },
+  "homepage": "https://github.com/witoon-skydea/KPI-cli1#readme",
+  "bugs": {
+    "url": "https://github.com/witoon-skydea/KPI-cli1/issues"
+  },
   "license": "MIT",
   "dependencies": {
     "commander": "^11.1.0",
