@@ -5,12 +5,12 @@ import type { Department } from '../../types/index.js';
 
 export interface CreateDepartmentInput {
   name: string;
-  description?: string;
+  description?: string | undefined;
 }
 
 export interface UpdateDepartmentInput {
-  name?: string;
-  description?: string;
+  name?: string | undefined;
+  description?: string | undefined;
 }
 
 export class DepartmentService {

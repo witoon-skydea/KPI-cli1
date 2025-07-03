@@ -1,6 +1,18 @@
 import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
 
+export const users = sqliteTable('users', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  email: text('email').notNull().unique(),
+  passwordHash: text('password_hash').notNull(),
+  name: text('name').notNull(),
+  role: text('role').notNull(), // 'admin', 'manager', 'employee'
+  staffId: integer('staff_id').references(() => staff.id),
+  active: integer('active', { mode: 'boolean' }).default(true),
+  createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text('updated_at').default(sql`CURRENT_TIMESTAMP`),
+});
+
 export const departments = sqliteTable('departments', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull().unique(),

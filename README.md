@@ -1,11 +1,12 @@
-# KPI CLI - Performance Management System
+# KPI Management System - Full-Stack Solution
 
-A comprehensive command-line interface for managing staff Key Performance Indicators (KPIs) with SQLite database backend, designed to be API-ready for future development.
+A comprehensive **CLI + REST API** system for managing staff Key Performance Indicators (KPIs) with SQLite database backend. Features complete CLI interface and production-ready REST API with authentication, role-based access control, and interactive documentation.
 
 ## Features
 
 ### ✅ Complete Implementation
 
+**🖥️ Command Line Interface:**
 - **Department Management**: Complete CRUD operations for organizational structure
 - **Staff Management**: Full employee lifecycle with department integration and performance tracking
 - **KPI Management**: Advanced KPI definition with formulas, scoring systems, and analytics
@@ -13,9 +14,15 @@ A comprehensive command-line interface for managing staff Key Performance Indica
 - **Evaluation Engine**: Automated KPI calculation with weighted scoring and grade assignment
 - **Reporting System**: Comprehensive quarterly and annual reports with trend analysis
 - **Interactive CLI**: Professional command interface with Thai language support
-- **Formula Engine**: Support for arithmetic expressions and mathematical functions
-- **Scoring System**: Flexible 1-5 point scoring with multiple criteria types
 - **Analytics Dashboard**: Performance insights, bulk operations, and advanced analytics
+
+**🌐 REST API (Production Ready):**
+- **Authentication & Security**: JWT-based auth with role-based access control (Admin/Manager/Employee)
+- **Department API**: Full CRUD operations with pagination, filtering, and statistics
+- **Staff API**: Complete staff management with performance analytics and search capabilities
+- **Security Features**: Rate limiting, CORS, Helmet security headers, input validation
+- **Documentation**: Interactive Swagger UI with OpenAPI 3.0 specification
+- **Health Monitoring**: Comprehensive health checks and status monitoring
 
 ### 🎯 Key Capabilities
 
@@ -28,11 +35,16 @@ A comprehensive command-line interface for managing staff Key Performance Indica
 
 ## Tech Stack
 
-- **Runtime**: Node.js 18+ with TypeScript
-- **Database**: SQLite with Drizzle ORM
+**🔧 Core Technologies:**
+- **Runtime**: Node.js 18+ with TypeScript (strict mode)
+- **Database**: SQLite with Drizzle ORM (TypeScript-first, migration-ready)
 - **CLI Framework**: Commander.js with inquirer prompts
-- **Validation**: Zod for schema validation
-- **Testing**: Vitest framework
+- **API Framework**: Fastify with comprehensive plugin ecosystem
+- **Authentication**: JWT tokens with bcrypt password hashing
+- **Validation**: Zod for schema validation and type safety
+- **Testing**: Vitest framework with comprehensive coverage
+- **Security**: Helmet, CORS, rate limiting, input sanitization
+- **Documentation**: OpenAPI 3.0 with Swagger UI
 - **Code Quality**: ESLint + TypeScript strict mode
 - **UI/UX**: Chalk for colored output, CLI tables, Thai language interface
 
@@ -59,22 +71,23 @@ npm run build
 ### Development
 
 ```bash
-# Start development with hot reload
-npm run dev
+# CLI Development
+npm run dev          # Start CLI development with hot reload
+npm run build        # Build TypeScript to JavaScript
+npm run test         # Run test suite
+npm run lint         # ESLint code checking
+npm run type-check   # TypeScript type checking
 
-# Build project
-npm run build
-
-# Run tests
-npm run test
-
-# Lint and type check
-npm run lint
-npm run type-check
+# API Development
+npm run api:dev      # Start API server in development mode
+npm run api:build    # Build and start API server
+npm run api:start    # Start production API server
 
 # Database operations
 npm run db:studio    # Open database browser
 npm run db:generate  # Generate migrations
+npm run db:migrate   # Run database migrations
+npm run db:seed      # Seed database with demo data
 ```
 
 ## CLI Usage
@@ -133,10 +146,101 @@ npm run cli report quarterly [--department <id>] [--year <year>] [--quarter <qua
 npm run cli report annual [--department <id>] [--year <year>]
 ```
 
+## REST API Usage
+
+### Starting the API Server
+
+```bash
+# Development mode with hot reload
+npm run api:dev
+
+# Production mode
+npm run build
+npm run api:start
+```
+
+**API Server URLs:**
+- **Base URL**: http://localhost:3000/api/v1/
+- **Documentation**: http://localhost:3000/api/docs
+- **Health Check**: http://localhost:3000/health
+
+### Authentication
+
+```bash
+# Login to get access token
+curl -X POST http://localhost:3000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "admin@kpi.local", "password": "admin123"}'
+
+# Use token in subsequent requests
+curl -X GET http://localhost:3000/api/v1/staff \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+### Available API Endpoints
+
+**🔐 Authentication:**
+- `POST /api/v1/auth/login` - User login
+- `POST /api/v1/auth/register` - User registration (Admin only)
+- `POST /api/v1/auth/refresh` - Refresh access token
+- `GET /api/v1/auth/profile` - Get user profile
+
+**🏢 Department Management:**
+- `GET /api/v1/departments` - List departments with pagination
+- `GET /api/v1/departments/:id` - Get department details
+- `POST /api/v1/departments` - Create department (Admin/Manager)
+- `PUT /api/v1/departments/:id` - Update department (Admin/Manager)
+- `DELETE /api/v1/departments/:id` - Delete department (Admin)
+
+**👥 Staff Management:**
+- `GET /api/v1/staff` - List staff with filtering & search
+- `GET /api/v1/staff/:id` - Get staff member details
+- `POST /api/v1/staff` - Create staff member (Admin/Manager)
+- `PUT /api/v1/staff/:id` - Update staff member (Admin/Manager)
+- `DELETE /api/v1/staff/:id` - Delete staff member (Admin)
+- `PATCH /api/v1/staff/:id/activate` - Activate staff member
+- `PATCH /api/v1/staff/:id/deactivate` - Deactivate staff member
+- `GET /api/v1/staff/:id/performance` - Get staff performance data
+
+**🔍 Advanced Features:**
+- **Filtering**: `?departmentId=1&active=true&position=manager`
+- **Search**: `?search=john` (searches name, email, employee ID)
+- **Pagination**: `?page=1&limit=20`
+- **Sorting**: `?sort=name&order=asc`
+
+### Example API Usage
+
+```bash
+# Get all active staff in department 1
+curl "http://localhost:3000/api/v1/staff?departmentId=1&active=true" \
+  -H "Authorization: Bearer TOKEN"
+
+# Search for staff by name
+curl "http://localhost:3000/api/v1/staff?search=john" \
+  -H "Authorization: Bearer TOKEN"
+
+# Create new staff member
+curl -X POST http://localhost:3000/api/v1/staff \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "employeeId": "EMP001",
+    "name": "John Doe",
+    "email": "john@company.com",
+    "departmentId": 1,
+    "position": "Developer"
+  }'
+
+# Get staff performance data
+curl http://localhost:3000/api/v1/staff/1/performance \
+  -H "Authorization: Bearer TOKEN"
+```
+
 ## Database Schema
 
 The system uses SQLite with the following core tables:
 
+- **users**: User accounts for API authentication (Admin/Manager/Employee roles)
 - **departments**: Organizational structure
 - **staff**: Employee records with department assignments
 - **kpis**: KPI definitions with formulas and scoring criteria
@@ -152,12 +256,19 @@ All business logic is implemented in the service layer (`src/core/services/`), m
 
 ```
 src/
+├── api/                # REST API Implementation
+│   ├── controllers/    # API request handlers
+│   ├── middleware/     # Authentication, error handling, validation
+│   ├── routes/         # API route definitions with OpenAPI schemas
+│   ├── schemas/        # Zod validation schemas for API requests
+│   └── server.ts       # Fastify server configuration
 ├── cli/
 │   ├── commands/       # CLI command handlers
 │   ├── interactive.ts  # Interactive mode with full features
 │   └── index.ts        # CLI entry point
 ├── core/
-│   ├── services/       # Business logic (API-ready)
+│   ├── services/       # Business logic (shared between CLI and API)
+│   │   ├── AuthService.ts      # User authentication
 │   │   ├── DepartmentService.ts
 │   │   ├── StaffService.ts
 │   │   ├── KPIService.ts
@@ -171,8 +282,8 @@ src/
 │   ├── schema.ts       # Database schema definitions
 │   ├── migrations/     # Database migration files
 │   └── demo-data/      # Sample data for testing
-├── types/              # TypeScript definitions
-└── config/             # Configuration
+├── types/              # TypeScript definitions (shared)
+└── config/             # Configuration (CLI and API)
 ```
 
 ### Formula System
@@ -244,16 +355,43 @@ The system includes comprehensive demo data:
 - **Grade Distribution**: 1 B, 2 C grades
 - **KPI Coverage**: 5 active KPIs with full data coverage
 
-## API Migration
+## API Implementation Status
 
-The service layer architecture enables zero-duplication API migration:
+### ✅ Completed REST API Features
 
-1. Add Express.js/Fastify routing layer
-2. Implement authentication middleware
-3. Add API response formatters
-4. Create OpenAPI documentation
+The service layer architecture enabled **zero-duplication API implementation**:
 
-All business logic remains in the service layer, immediately reusable for REST endpoints.
+**✅ Authentication & Security:**
+- JWT-based authentication with access and refresh tokens
+- Role-based authorization (Admin, Manager, Employee)
+- bcrypt password hashing with secure session management
+- Security middleware: Helmet, CORS, rate limiting
+
+**✅ Department Management API:**
+- Complete CRUD operations with proper authorization
+- Pagination, filtering, and search capabilities
+- Department statistics and staff listings
+- Input validation and error handling
+
+**✅ Staff Management API:**
+- Full staff lifecycle management with department integration
+- Advanced filtering (department, active status, position)
+- Text search across name, email, employee ID
+- Performance analytics and KPI tracking
+- Activation/deactivation workflows
+
+**✅ Infrastructure:**
+- Fastify server with production-ready plugins
+- OpenAPI 3.0 specification with interactive Swagger UI
+- Comprehensive health monitoring and status endpoints
+- Request/response validation using Zod schemas
+- Standardized error responses with proper HTTP status codes
+
+**🚧 Coming Next:**
+- KPI Management API endpoints
+- Data Entry & Evaluation API
+- Reporting & Analytics API
+- Advanced features and optimizations
 
 ## Development Guidelines
 

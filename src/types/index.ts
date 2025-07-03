@@ -1,3 +1,6 @@
+// Re-export API types
+export * from './api.js';
+
 export interface Department {
   id: number;
   name: string;
